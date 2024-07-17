@@ -6,15 +6,8 @@ const seed = require('../db/seeds/seed')
 
 require("pg").defaults.parseInt8 = true;
 
-
-beforeEach( () => {
-    return seed(testData)
-})
-
-afterAll( () => {
-    return db.end()
-})
-
+beforeEach(() => seed(testData));
+afterAll(() => db.end());
 
 describe("GET/api/walklocationpoints/1", () => {
     test("200 - responds with a 200 and list of walk location points for the given walk_id", async () => {

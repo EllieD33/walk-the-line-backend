@@ -6,15 +6,8 @@ const seed = require('../db/seeds/seed')
 
 require("pg").defaults.parseInt8 = true;
 
-
-beforeEach( () => {
-    return seed(testData)
-})
-
-afterAll( () => {
-    return db.end()
-})
-
+beforeEach(() => seed(testData));
+afterAll(() => db.end());
 
 describe("POST/api/walks", () => {
     test("201 - responds with 201 when trail created", async () => {

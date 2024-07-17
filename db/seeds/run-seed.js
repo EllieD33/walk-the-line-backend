@@ -2,9 +2,9 @@ const devData = require('../data/development-data/index.js');
 const seed = require('./seed.js');
 const db = require('../connection.js');
 
-async function runSeed() {
+const runSeed = async () => {
     await seed(devData);
-    return await db.end();
+    await db.end();
 };
 
 runSeed();

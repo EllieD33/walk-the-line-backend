@@ -12,6 +12,6 @@ apiRouter.use(express.json())
 apiRouter.use('/walklocationpoints/', locationPointsRouter)
 apiRouter.use('/walk', walkRouter)
 apiRouter.use('/walks', walksRouter)
-apiRouter.use('/user/', usersRouter)
+apiRouter.use('/users', usersRouter)
 
 module.exports = apiRouter;

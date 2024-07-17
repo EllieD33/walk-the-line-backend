@@ -1,19 +1,31 @@
-const db = require("../db/connection")
+const db = require("../db/connection");
+const bcrypt = require("bcrypt");
 
-async function fetchUser(username, password) {
-    let userQueryStr = `SELECT * 
+const fetchUser = async (username, password) => {
+    const userQueryStr = `SELECT * 
                         FROM users 
-                        WHERE username = $1 
-                        AND password = $2;`
+                        WHERE username = $1;`;
+    const user = await db.query(userQueryStr, [username]);
+    if (!user.rows.length) return null;
 
-    const fetchUsersResult = await db.query(userQueryStr, [username, password])
+    const storedPassword = user.rows[0].password;
+    const isPasswordValid = await bcrypt.compare(password, storedPassword);
 
-    return fetchUsersResult.rows[0]
-}
+    if (!isPasswordValid) return null;
+
+    return user.rows[0];
+};
 
 const fetchUserByUsername = async (username) => {
-    const result = await db.query('SELECT * FROM users WHERE username = $1', [username]);
-    return result.rows[0];
-  };
+  const queryStr = `SELECT * FROM users WHERE username = $1`;
+  const result = await db.query(queryStr, [username]);
+  return result.rows[0];
+};
 
-module.exports = {fetchUser, fetchUserByUsername}
+const createUser =  async (username, hashedPassword) => {
+  const insertStr = `INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *`;
+  const result = await db.query(insertStr, [username, hashedPassword]);
+  return result.rows[0];
+}
+
+module.exports = { fetchUser, fetchUserByUsername, createUser };

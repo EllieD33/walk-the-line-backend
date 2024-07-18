@@ -1,6 +1,6 @@
 const { fetchLocationPoints } = require('../models/locationpoints.model')
 
-async function getLocationPoints(req, res, next) {
+const getLocationPoints = async (req, res, next) => {
     try {
         const walkId = parseInt(req.params.walk_id)
 

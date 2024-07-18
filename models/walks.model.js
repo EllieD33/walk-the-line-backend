@@ -28,6 +28,10 @@ const fetchWalks = async (walk_id, creator_id, difficultyRequired, minDistance, 
 const createTrail = async (trailObj) => {
     const { walk, locations } = trailObj;
 
+    if (!locations) {
+        return Promise.reject({ status: 400, msg: 'Bad request'})
+    }
+
     const walkQueryText = `
         INSERT INTO walks (
             creator_id, title, description, distance_km,

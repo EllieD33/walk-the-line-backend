@@ -5,13 +5,13 @@ const getLocationPoints = async (req, res, next) => {
         const walkId = parseInt(req.params.walk_id)
 
         if (isNaN(walkId)) {
-            return res.sendStatus(400)
+            return res.status(400).send({ msg: 'Bad request' })
         }
 
         const locationPointsArray = await fetchLocationPoints(walkId)
         res.status(200).send({locationPoints: locationPointsArray})
     }
-    catch {
+    catch (err) {
         next(err)
     }
 }

@@ -11,32 +11,11 @@ const fetchWalks = async (walk_id, creator_id, difficultyRequired, minDistance, 
     
     const queryValues = [];
 
-    if (walk_id) {
-        queryText += ` AND wlk.walk_id = $${queryValues.push(walk_id)}`;
-    }
-
-    if (creator_id) {
-        queryText += ` AND wlk.creator_id = $${queryValues.push(creator_id)}`;
-    }
-
-    if (difficultyRequired) {
-        queryText += ` AND wlk.difficulty = $${queryValues.push(difficultyRequired)}`;
-    }
-
-    if (minDistance) {
-        queryText += ` AND wlk.distance_km >= $${queryValues.push(minDistance)}`;
-    }
-
-    if (maxDistance) {
-        queryText += ` AND wlk.distance_km <= $${queryValues.push(maxDistance)}`;
-    }
-
-    if (queryValues.length === 0) {
-        queryText = `
-            SELECT wlk.*, usr.username
-            FROM walks wlk
-            JOIN users usr ON usr.user_id = wlk.creator_id`;
-    }
+    if (walk_id) queryText += ` AND wlk.walk_id = $${queryValues.push(walk_id)}`;
+    if (creator_id) queryText += ` AND wlk.creator_id = $${queryValues.push(creator_id)}`;
+    if (difficultyRequired) queryText += ` AND wlk.difficulty = $${queryValues.push(difficultyRequired)}`;
+    if (minDistance) queryText += ` AND wlk.distance_km >= $${queryValues.push(minDistance)}`;
+    if (maxDistance) queryText += ` AND wlk.distance_km <= $${queryValues.push(maxDistance)}`;
 
     const { rows } = await db.query(queryText, queryValues);
 

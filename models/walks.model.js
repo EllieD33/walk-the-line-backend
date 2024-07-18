@@ -39,6 +39,11 @@ const fetchWalks = async (walk_id, creator_id, difficultyRequired, minDistance, 
     }
 
     const { rows } = await db.query(queryText, queryValues);
+
+    if (walk_id && rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "Not found" });
+    }
+
     return rows;
 };
 

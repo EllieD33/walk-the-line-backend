@@ -17,6 +17,14 @@ describe("GET /api/walks", () => {
 });
 
 describe("GET /api/walks? ", () => {
+    test("200: responds with a list of walks by creator", async () => {
+        const { body } = await request(app)
+            .get("/api/walks?creator_id=4")
+            .expect(200);
+
+        expect(body.walks).toHaveLength(3);
+    });
+
     test("200: responds with a list of walks by difficulty", async () => {
         const { body } = await request(app)
             .get("/api/walks?difficulty=2")
@@ -57,6 +65,14 @@ describe("GET /api/walks? ", () => {
         expect(body.walks).toHaveLength(2);
     });
 
+    test("200: responds with a list of walks within a distance range", async () => {
+        const { body } = await request(app)
+            .get("/api/walks?minDistance=10&maxDistance=20")
+            .expect(200);
+
+        expect(body.walks).toHaveLength(4);
+    });
+
     test("200: responds with a list of walks when all criteria applied", async () => {
         const { body } = await request(app)
             .get(
@@ -66,10 +82,18 @@ describe("GET /api/walks? ", () => {
 
         expect(body.walks).toHaveLength(1);
     });
+
+    test("400: responds with error when invalid query parameter is provided", async () => {
+        const { body } = await request(app)
+            .get("/api/walks?difficulty=invalid")
+            .expect(400);
+
+        expect(body.msg).toBe("Bad request");
+    });
 });
 
-describe("GET /api/walks/2", () => {
-    test("200 - responds with a walk matching given walk id", async () => {
+describe("GET /api/walks/:walk_id", () => {
+    test("200: responds with a walk matching given walk id", async () => {
         const expectedResult = [
             {
                 walk_id: 2,
@@ -89,6 +113,22 @@ describe("GET /api/walks/2", () => {
 
         const { body } = await request(app).get("/api/walks/2").expect(200);
         expect(body.walks).toEqual(expectedResult);
+    });
+
+    test('404: responds with error if walk doesnt exist', async () => {
+        const { body } = await request(app)
+            .get("/api/walks/9999999")
+            .expect(404);
+
+        expect(body.msg).toBe("Not found");
+    });
+
+    test('404: responds with error if invalid id type provided', async () => {
+        const { body } = await request(app)
+            .get("/api/walks/invalid")
+            .expect(400);
+
+        expect(body.msg).toBe("Bad request");
     });
 });
 

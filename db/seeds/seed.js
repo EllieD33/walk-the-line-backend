@@ -1,5 +1,6 @@
 const format = require('pg-format');
 const db = require('../connection');
+const bcrypt = require('bcrypt');
 
 const seed = async ({ userData, walkData, walkLocationsData }) => {
     try {
@@ -66,11 +67,17 @@ const createWalkLocationPointsTable = async () => {
 };
 
 const seedUsers = async (userData) => {
+    for (const user of userData) {
+        const salt = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(user.password, salt);
+    }
+
     const insertUserStr = format(
         'INSERT INTO users (username, password) VALUES %L RETURNING *;',
         userData.map(({ username, password }) => [username, password])
     );
     await db.query(insertUserStr);
+    const users = await db.query('SELECT * FROM users');
 };
 
 const seedWalks = async (walkData) => {

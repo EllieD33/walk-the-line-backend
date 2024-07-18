@@ -1,22 +1,22 @@
 module.exports = [
     {
-      username: 'Anonymous',
-      password: 'Anonymous'
+      username: 'BabySpice',
+      password: 'Emma'
     },
     {
-      username: 'Jonathan',
-      password: 'Jonathan'
+      username: 'PoshSpice',
+      password: 'Victoria'
     },
     {
-      username: 'Eddie',
-      password: 'Eddie'
+      username: 'GingerSpice',
+      password: 'Geri'
     },
     {
-      username: 'Ellen',
-      password: 'Ellen'
+      username: 'ScarySpice',
+      password: 'MelB'
     },
     {
-      username: 'Jamie',
-      password: 'Jamie'
+      username: 'SportySpice',
+      password: 'MelC'
     }
 ]

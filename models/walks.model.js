@@ -2,139 +2,95 @@ const db = require("../db/connection")
 const format = require('pg-format');
 
 
-// Create Trail. 
-async function createTrail(trailObj) {
-    const returnObj = {}
-
-    // Insert the WALK record. 
-    const walkObj = trailObj.walk
-    let insertWalkStr = `INSERT INTO walks (
-                                    creator_id,
-                                    title,
-                                    description, 
-                                    distance_km,
-                                    ascent,
-                                    difficulty,
-                                    start_latitude,
-                                    start_longitude,
-                                    start_altitude
-                                ) 
-                                VALUES ( 
-                                    $1, 
-                                    $2, 
-                                    $3,
-                                    $4, 
-                                    $5, 
-                                    $6,
-                                    $7, 
-                                    $8, 
-                                    $9 ) RETURNING *;`
-
-    const insertWalkResult = await db.query(insertWalkStr, [walkObj.creator_id,
-                                                            walkObj.title,
-                                                            walkObj.description, 
-                                                            walkObj.distance_km,
-                                                            walkObj.ascent,
-                                                            walkObj.difficulty,
-                                                            walkObj.start_latitude,
-                                                            walkObj.start_longitude,
-                                                            walkObj.start_altitude ])
+const fetchWalks = async (walk_id, creator_id, difficultyRequired, minDistance, maxDistance) => {
+    let queryText = `
+        SELECT wlk.*, usr.username
+        FROM walks wlk
+        JOIN users usr ON usr.user_id = wlk.creator_id
+        WHERE 1 = 1`;
     
-    returnObj.walk = insertWalkResult.rows[0]
-    const walkId = returnObj.walk.id
+    const queryValues = [];
 
-    // Insert WALK_LOCATION_POINTS records. 
-    const locationsObj = trailObj.locations
-    const insertWalkLocationsStr = format(`INSERT INTO walk_location_points (
-                                                walk_id, 
-                                                latitude, 
-                                                longitude, 
-                                                altitude) 
-                                            VALUES %L;`, 
-                                            locationsObj.map( ({latitude, longitude, altitude}) => [walkId, 
-                                                                                                    latitude, 
-                                                                                                    longitude,
-                                                                                                    altitude
-                                                                                                        ])
-                                        )
-
-    await db.query(insertWalkLocationsStr)
-
-    return returnObj
-}
-
-// Fetch Walks. 
-async function fetchWalks(creatorId, difficultyRequired, minDistance, maxDistance) {
-    // Code body. 
-    let walkQueryStr = `SELECT  wlk.*, 
-                                usr.username
-                        FROM    walks wlk
-                        JOIN users usr ON usr.id = wlk.creator_id`
-
-    const queryParamArray = []
-
-    // Creator. 
-    if (creatorId) {
-        queryParamArray.push(creatorId)
-        walkQueryStr += ` WHERE creator_id = $1`
+    if (walk_id) {
+        queryText += ` AND wlk.walk_id = $${queryValues.push(walk_id)}`;
     }
 
-    // Difficulty. 
+    if (creator_id) {
+        queryText += ` AND wlk.creator_id = $${queryValues.push(creator_id)}`;
+    }
+
     if (difficultyRequired) {
-        if (queryParamArray.length) {
-            walkQueryStr += ` AND`
-        } else {
-            walkQueryStr += ` WHERE`
-        }
-
-        queryParamArray.push(difficultyRequired)
-        walkQueryStr += ` difficulty = $${queryParamArray.length}`
+        queryText += ` AND wlk.difficulty = $${queryValues.push(difficultyRequired)}`;
     }
 
-    // MinDistance
     if (minDistance) {
-        if (queryParamArray.length) {
-            walkQueryStr += ` AND`
-        } else {
-            walkQueryStr += ` WHERE`
-        }
-
-        queryParamArray.push(minDistance)
-        walkQueryStr += ` distance_km >= $${queryParamArray.length}`
+        queryText += ` AND wlk.distance_km >= $${queryValues.push(minDistance)}`;
     }
 
-    // MaxDistance
     if (maxDistance) {
-        if (queryParamArray.length) {
-            walkQueryStr += ` AND`
-        } else {
-            walkQueryStr += ` WHERE`
-        }
-
-        queryParamArray.push(maxDistance)
-        walkQueryStr += ` distance_km <= $${queryParamArray.length}`
+        queryText += ` AND wlk.distance_km <= $${queryValues.push(maxDistance)}`;
     }
 
-    walkQueryStr = walkQueryStr + ';'
+    if (queryValues.length === 0) {
+        queryText = `
+            SELECT wlk.*, usr.username
+            FROM walks wlk
+            JOIN users usr ON usr.user_id = wlk.creator_id`;
+    }
 
-    const fetchWalksResult = await db.query(walkQueryStr, queryParamArray)
+    const { rows } = await db.query(queryText, queryValues);
+    return rows;
+};
 
-    return fetchWalksResult.rows
+
+const createTrail = async (trailObj) => {
+    const { walk, locations } = trailObj;
+
+    const insertWalkText = `
+        INSERT INTO walks (
+            creator_id, title, description, distance_km,
+            ascent, difficulty, start_latitude, start_longitude, start_altitude
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+        RETURNING *`;
+
+    const walkValues = [
+        walk.creator_id, walk.title, walk.description, walk.distance_km,
+        walk.ascent, walk.difficulty, walk.start_latitude, walk.start_longitude, walk.start_altitude
+    ];
+
+    const { rows: [insertedWalk] } = await db.query(insertWalkText, walkValues);
+
+    if (!insertedWalk) {
+        throw new Error('Failed to insert walk');
+    }
+
+    const walkId = insertedWalk.walk_id;
+
+    const locationsValues = locations.map(loc => [
+        walkId, loc.latitude, loc.longitude, loc.altitude
+    ]);
+
+    const insertLocationsText = format(`
+        INSERT INTO walk_location_points (walk_id, latitude, longitude, altitude)
+        VALUES %L
+    `, locationsValues);
+
+    await db.query(insertLocationsText);
+
+    return { walk: insertedWalk };
 }
 
-// Remove Walk. 
-async function removeWalk(id) {
-    if (!Number.isInteger(id)) {
+const removeWalk = async (walk_id) => {
+    if (!Number.isInteger(walk_id)) {
         return Promise.reject({ status: 400, msg: "Bad Request" })
     }
 
-    let deleteStr = 'DELETE FROM walks WHERE id = $1;'
-    const deleteResult = await db.query(deleteStr, [id])
+    let deleteStr = 'DELETE FROM walks WHERE walk_id = $1;'
+    const deleteResult = await db.query(deleteStr, [walk_id])
 
     if (deleteResult.rowCount === 0) {
         return Promise.reject({ status: 404, msg: "Not Found" });
     }
 }
-
 
 module.exports = {createTrail, fetchWalks, removeWalk}

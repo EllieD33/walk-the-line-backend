@@ -1,11 +1,10 @@
 const walksRouter = require('express').Router()
-const {getWalks, postTrail} = require('../controllers/walks.controller')
+const {getWalks, postTrail, deleteWalk} = require('../controllers/walks.controller')
 
-walksRouter.route('/')
-    .get(getWalks)
-    .post(postTrail)
+walksRouter.get('/', getWalks);
+walksRouter.post('/', postTrail);
 
-walksRouter.route('/:creator_id')
-    .get(getWalks)
+walksRouter.get('/:walk_id', getWalks);
+walksRouter.delete('/:walk_id', deleteWalk);
 
 module.exports = walksRouter

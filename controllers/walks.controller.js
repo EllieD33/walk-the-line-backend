@@ -1,6 +1,18 @@
 const {createTrail, fetchWalks, removeWalk} = require('../models/walks.model')
 
-async function postTrail(req, res, next) {
+const getWalks = async (req, res, next) => {
+    try {
+        const { walk_id } = req.params;
+        const { difficulty, minDistance, maxDistance, creator_id } = req.query;
+        const walks = await fetchWalks(walk_id, creator_id, difficulty, minDistance, maxDistance)
+        res.status(200).send({ walks })
+    }
+    catch(err) {
+        next(err)
+    }
+}
+
+const postTrail = async (req, res, next) => {
     try {
         const newTrail = req.body
         const postTrailResponse = await createTrail(newTrail)
@@ -11,22 +23,10 @@ async function postTrail(req, res, next) {
     }
 }
 
-async function getWalks(req, res, next) {
+const deleteWalk = async (req, res, next) => {
     try {
-        const creatorId = req.params.creator_id
-        const {difficulty, minDistance, maxDistance} = req.query
-        const walkArray = await fetchWalks(creatorId, difficulty, minDistance, maxDistance)
-        res.status(200).send({walks: walkArray})
-    }
-    catch(err) {
-        next(err)
-    }
-}
-
-async function deleteWalk(req, res, next) {
-    try {
-        const id = parseInt(req.params.id)
-        await removeWalk(id)
+        const { walk_id } = req.params;
+        await removeWalk(parseInt(walk_id))
         res.status(204).send()
     }
     catch(err) {
@@ -35,4 +35,4 @@ async function deleteWalk(req, res, next) {
 }
 
 
-module.exports = {getWalks, postTrail, deleteWalk}
+module.exports = { getWalks, postTrail, deleteWalk }

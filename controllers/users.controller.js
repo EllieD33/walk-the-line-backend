@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const { createUser, fetchUser, fetchUserByUsername } = require("../models/users.model");
+const { createUser, fetchUser, fetchUserByUsername, removeUserAccount } = require("../models/users.model");
 
 const signUp = async (req, res, next) => {
     const { username, password } = req.body;
@@ -50,4 +50,14 @@ const getUserByUsername = async (req, res, next) => {
     }
 };
 
-module.exports = { signUp, signIn, getUserByUsername };
+const deleteUserAccount = async (req, res, next) => {
+    const { username } = req.params;
+    try {
+        await removeUserAccount(username);
+        res.status(204).send(); 
+    } catch (error) {
+        next(error);
+    }
+}
+
+module.exports = { signUp, signIn, getUserByUsername, deleteUserAccount };

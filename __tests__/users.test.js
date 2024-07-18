@@ -92,3 +92,21 @@ describe("GET /api/users/:username", () => {
         expect(response.body.message).toBe("User not found");
     });
 });
+
+describe('DELETE /api/users/:username', () => {
+    test('204: responds with a 204 for valid input', async () => {
+        await request(app).delete("/api/users/PoshSpice").expect(204);
+
+        const checkUserDeleted = await db.query(
+            `SELECT 1 FROM users WHERE username = $1;`,
+            ['PoshSpice']
+        );
+        expect(checkUserDeleted.rows).toEqual([]);
+    });
+    test("404: responds with a error if username does not exist", async () => {
+        const { body } = await request(app)
+            .delete("/api/users/SantaClaus")
+            .expect(404);
+        expect(body.msg).toBe("Not found");
+    });
+});

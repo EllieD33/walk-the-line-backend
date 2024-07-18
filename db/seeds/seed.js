@@ -39,7 +39,7 @@ const createWalksTable = async () => {
     await db.query(`
         CREATE TABLE walks (
             walk_id SERIAL PRIMARY KEY,
-            creator_id INT REFERENCES users(user_id) NOT NULL,
+            creator_id INT REFERENCES users(user_id) ON DELETE CASCADE NOT NULL,
             title VARCHAR NOT NULL,
             description VARCHAR,
             distance_km NUMERIC(4,2),

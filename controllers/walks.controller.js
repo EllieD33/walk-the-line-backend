@@ -27,7 +27,7 @@ const deleteWalk = async (req, res, next) => {
     try {
         const { walk_id } = req.params;
         await removeWalk(parseInt(walk_id))
-        res.status(204).send()
+        res.sendStatus(204);
     }
     catch(err) {
         next(err)

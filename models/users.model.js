@@ -40,4 +40,15 @@ const createUser =  async (username, hashedPassword) => {
   }
 }
 
-module.exports = { fetchUser, fetchUserByUsername, createUser };
+const removeUserAccount = async (username) => {
+    let queryText = 'DELETE FROM users WHERE username = $1;';
+    const deletionResult = await db.query(queryText, [username]);
+
+    if (deletionResult.rowCount === 0) {
+        return Promise.reject({ status: 404, msg: "Not found" });
+    }
+    return 
+  
+}
+
+module.exports = { fetchUser, fetchUserByUsername, createUser, removeUserAccount };

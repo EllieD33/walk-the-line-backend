@@ -1,14 +1,19 @@
 const db = require("../db/connection")
 
-async function fetchLocationPoints(walkId) {
-    const locationQueryStr =   `SELECT *
-                                FROM walk_location_points 
-                                WHERE walk_id = $1
-                                ORDER BY location_timestamp, id;`
+const fetchLocationPoints = async (walkId) => {
+    const queryText =   `
+        SELECT *
+        FROM walk_location_points 
+        WHERE walk_id = $1
+        ORDER BY location_timestamp, id;
+    `;
 
-    const fetchLocationsResult = await db.query(locationQueryStr, [walkId])
+    try {
+        const { rows } = await db.query(queryText, [walkId]);
+        return rows;
+    } catch (err) {
+        next(err)
+    }
+};
 
-    return fetchLocationsResult.rows
-}
-
-module.exports = {fetchLocationPoints}
+module.exports = { fetchLocationPoints };

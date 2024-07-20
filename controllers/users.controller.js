@@ -29,7 +29,7 @@ const signIn = async (req, res, next) => {
             return res.status(401).json({ message: "Invalid credentials" });
         }
 
-        res.json({ user: { id: user.user_id, username: user.username } });
+        res.json({ user: { user_id: user.user_id, username: user.username } });
     } catch (error) {
         next(error);
     }

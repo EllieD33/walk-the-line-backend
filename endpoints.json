@@ -1,0 +1,167 @@
+{
+    "endpoints": [
+        {
+            "method": "POST",
+            "path": "/api/users/signin",
+            "description": "Sign in an existing user",
+            "exampleResponse": {
+                "user": {
+                    "username": "GingerSpice"
+                }
+            }
+        },
+        {
+            "method": "POST",
+            "path": "/api/users/signup",
+            "description": "Create a new user",
+            "exampleResponse": {
+                "message": "User created successfully"
+            }
+        },
+        {
+            "method": "GET",
+            "path": "/api/users/:username",
+            "description": "Get user details for a given username",
+            "exampleResponse": {
+                "user": {
+                    "username": "ScarySpice"
+                }
+            }
+        },
+        {
+            "method": "DELETE",
+            "path": "/api/users/:username",
+            "description": "Delete a user by username",
+            "exampleResponse": null
+        },
+        {
+            "method": "GET",
+            "path": "/api/walks",
+            "description": "Get a list of all walks",
+            "exampleResponse": {
+                "walks": [
+                    {
+                        "walk_id": 1,
+                        "username": "GingerSpice",
+                        "creator_id": 1,
+                        "title": "Walk Title",
+                        "description": "Walk Description",
+                        "distance_km": "5.55",
+                        "ascent": "200",
+                        "rating": null,
+                        "difficulty": "3",
+                        "start_latitude": "53.7743100",
+                        "start_longitude": "-1.9006900",
+                        "start_altitude": "0.00"
+                    }
+                ]
+            }
+        },
+        {
+            "method": "GET",
+            "path": "/api/walks",
+            "description": "Get walks filtered by various criteria",
+            "queryParameters": {
+                "creator_id": "number",
+                "difficulty": "number",
+                "minDistance": "number",
+                "maxDistance": "number"
+            },
+            "exampleResponse": {
+                "walks": [
+                    {
+                        "walk_id": 1,
+                        "username": "GingerSpice",
+                        "creator_id": 4,
+                        "title": "Filtered Walk",
+                        "description": "Filtered Description",
+                        "distance_km": "10.00",
+                        "ascent": "250",
+                        "rating": null,
+                        "difficulty": "2",
+                        "start_latitude": "53.7743100",
+                        "start_longitude": "-1.9006900",
+                        "start_altitude": "0.00"
+                    }
+                ]
+            }
+        },
+        {
+            "method": "GET",
+            "path": "/api/walks/:walk_id",
+            "description": "Get details of a specific walk by walk_id",
+            "exampleResponse": {
+                "walks": [
+                    {
+                        "walk_id": 2,
+                        "username": "GingerSpice",
+                        "creator_id": 3,
+                        "title": "Ogden Water",
+                        "description": "It is always wet in Ogden.",
+                        "distance_km": "5.55",
+                        "ascent": "219.62",
+                        "rating": null,
+                        "difficulty": "2",
+                        "start_latitude": "53.7743100",
+                        "start_longitude": "-1.9006900",
+                        "start_altitude": "0.00"
+                    }
+                ]
+            }
+        },
+        {
+            "method": "POST",
+            "path": "/api/walks",
+            "description": "Create a new walk",
+            "requestBody": {
+                "walk": {
+                    "creator_id": "number",
+                    "title": "string",
+                    "description": "string",
+                    "distance_km": "number",
+                    "ascent": "number",
+                    "difficulty": "number or null",
+                    "start_latitude": "number",
+                    "start_longitude": "number",
+                    "start_altitude": "number"
+                },
+                "locations": "array of location objects"
+            },
+            "exampleResponse": {
+                "walk": {
+                    "walk_id": 7,
+                    "creator_id": 1,
+                    "title": "Bronte country 2",
+                    "description": "Haworth to Withins Heights with only start, middle and end locations.",
+                    "distance_km": "11.72",
+                    "ascent": "345.75",
+                    "rating": null,
+                    "difficulty": null,
+                    "start_latitude": "53.8289460",
+                    "start_longitude": "-1.9569740",
+                    "start_altitude": "0.00"
+                }
+            }
+        },
+        {
+            "method": "DELETE",
+            "path": "/api/walks/:walk_id",
+            "description": "Delete a walk by walk_id",
+            "exampleResponse": null
+        },
+        {
+            "method": "GET",
+            "path": "/api/walklocationpoints/:walk_id",
+            "description": "Get location points for a specific walk",
+            "exampleResponse": {
+                "locationPoints": [
+                    {
+                        "latitude": 53.828946,
+                        "longitude": -1.956974,
+                        "altitude": 0
+                    }
+                ]
+            }
+        }
+    ]
+}

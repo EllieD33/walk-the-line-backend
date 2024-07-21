@@ -16,7 +16,11 @@
             "path": "/api/users/signup",
             "description": "Create a new user",
             "exampleResponse": {
-                "message": "User created successfully"
+                "user": {
+                    "user_id": 3,
+                    "username": "GingerSpice",
+                    "email": "ginger@spicegirls.com"
+                }
             }
         },
         {
@@ -39,7 +43,9 @@
             "description": "Get user details for a given username",
             "exampleResponse": {
                 "user": {
-                    "username": "ScarySpice"
+                    "user_id": 3,
+                    "username": "GingerSpice",
+                    "email": "ginger@spicegirls.com"
                 }
             }
         },

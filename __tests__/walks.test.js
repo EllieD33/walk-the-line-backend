@@ -13,6 +13,20 @@ describe("GET /api/walks", () => {
     test("200: responds with a list of all walks", async () => {
         const response = await request(app).get("/api/walks").expect(200);
         expect(response.body.walks).toHaveLength(6);
+        response.body.walks.forEach(() => expect.objectContaining({
+            "walk_id": expect.any(Number),
+            "username": expect.any(String),
+            "creator_id": expect.any(Number),
+            "title": expect.any(String),
+            "description": expect.any(String),
+            "distance_km": expect.any(Number),
+            "ascent": expect.any(Number),
+            "rating": expect.any(Number) || expect.toBeNull(),
+            "difficulty": expect.any(Number) || expect.toBeNull(),
+            "start_latitude": expect.any(Number),
+            "start_longitude": expect.any(Number),
+            "start_altitude": expect.any(Number),
+        }))
     });
 });
 
@@ -101,13 +115,13 @@ describe("GET /api/walks/:walk_id", () => {
                 creator_id: 3,
                 title: "Ogden Water",
                 description: "It is always wet in Ogden.",
-                distance_km: "5.55",
-                ascent: "219.62",
+                distance_km: 5.55,
+                ascent: 219.62,
                 rating: null,
-                difficulty: "2",
-                start_latitude: "53.7743100",
-                start_longitude: "-1.9006900",
-                start_altitude: "0.00",
+                difficulty: 2,
+                start_latitude: 53.7743100,
+                start_longitude: -1.9006900,
+                start_altitude: 0.00,
             },
         ];
 

@@ -4,7 +4,18 @@ const getWalks = async (req, res, next) => {
     try {
         const { walk_id } = req.params;
         const { difficulty, minDistance, maxDistance, creator_id } = req.query;
-        const walks = await fetchWalks(walk_id, creator_id, difficulty, minDistance, maxDistance)
+        const result = await fetchWalks(walk_id, creator_id, difficulty, minDistance, maxDistance);
+        const walks = result.map((walk) => {
+            return {
+                ...walk,
+                difficulty: parseInt(walk.difficulty),
+                distance_km: parseFloat(walk.distance_km),
+                ascent: parseFloat(walk.ascent),
+                start_latitude: parseFloat(walk.start_latitude),
+                start_longitude: parseFloat(walk.start_longitude),
+                start_altitude: parseFloat(walk.start_altitude),
+            }
+        });
         res.status(200).send({ walks })
     }
     catch(err) {

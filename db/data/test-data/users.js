@@ -1,22 +1,27 @@
 module.exports = [
     {
       username: 'BabySpice',
-      password: 'Emma'
+      password: 'Emma',
+      email: 'baby@spicegirls.com'
     },
     {
       username: 'PoshSpice',
-      password: 'Victoria'
+      password: 'Victoria',
+      email: 'posh@spicegirls.com'
     },
     {
       username: 'GingerSpice',
-      password: 'Geri'
+      password: 'Geri',
+      email: 'ginger@spicegirls.com'
     },
     {
       username: 'ScarySpice',
-      password: 'MelB'
+      password: 'MelB',
+      email: 'scary@spicegirls.com'
     },
     {
       username: 'SportySpice',
-      password: 'MelC'
+      password: 'MelC',
+      email: 'sporty@spicegirls.com'
     }
 ]

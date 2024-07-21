@@ -41,10 +41,10 @@ const fetchUserByUsername = async (username) => {
   }
 };
 
-const createUser =  async (username, hashedPassword) => {
+const createUser =  async (username, hashedPassword, email) => {
   try {
-    const queryText = `INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *`;
-    const result = await db.query(queryText, [username, hashedPassword]);
+    const queryText = `INSERT INTO users (username, password, email) VALUES ($1, $2, $3) RETURNING *`;
+    const result = await db.query(queryText, [username, hashedPassword, email]);
     return result.rows[0];
   } catch (err) {
     return Promise.reject({ status: 500, msg: "Failed to create user" });

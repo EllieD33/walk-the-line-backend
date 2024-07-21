@@ -2,7 +2,7 @@ const bcrypt = require("bcrypt");
 const { createUser, fetchUser, fetchAllUsers, fetchUserByUsername, removeUserAccount } = require("../models/users.model");
 
 const signUp = async (req, res, next) => {
-    const { username, password } = req.body;
+    const { username, password, email } = req.body;
 
     try {
         const existingUser = await fetchUserByUsername(username);
@@ -12,8 +12,9 @@ const signUp = async (req, res, next) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        await createUser(username, hashedPassword);
-        res.status(201).json({ message: "User created successfully" });
+        const user = await createUser(username, hashedPassword, email);
+        const { password: userPassword, ...userWithoutPassword } = user;
+        res.status(201).send({user: userWithoutPassword});
     } catch (error) {
         next(error);
     }

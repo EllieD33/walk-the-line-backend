@@ -44,14 +44,18 @@ describe("POST /api/users/signup", () => {
         const newUser = {
             username: "newuser",
             password: "password123",
+            email: "fake@email.com"
         };
 
         const response = await request(app)
             .post("/api/users/signup")
             .send(newUser)
             .expect(201);
-
-        expect(response.body.message).toBe("User created successfully");
+        expect(response.body.user).toEqual(expect.objectContaining({
+                user_id: expect.any(Number),
+                username: "newuser",
+                email: "fake@email.com"
+        }));
         
         const user = await db.query("SELECT * FROM users WHERE username = $1", [newUser.username]);
         expect(user.rows.length).toBe(1);
@@ -104,6 +108,7 @@ describe("GET /api/users/:username", () => {
         expect(response.body.user).toEqual(expect.objectContaining({
             user_id: expect.any(Number),
             username: expect.any(String),
+            email: expect.any(String)
         }))
     });
     test("404: for non-existent user", async () => {

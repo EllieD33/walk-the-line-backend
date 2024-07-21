@@ -30,6 +30,7 @@ const createUsersTable = async () => {
         CREATE TABLE users (
             user_id SERIAL PRIMARY KEY,
             username VARCHAR NOT NULL,
+            email VARCHAR,
             password VARCHAR NOT NULL
         );
     `);
@@ -73,8 +74,8 @@ const seedUsers = async (userData) => {
     }
 
     const insertUserStr = format(
-        'INSERT INTO users (username, password) VALUES %L RETURNING *;',
-        userData.map(({ username, password }) => [username, password])
+        'INSERT INTO users (username, password, email) VALUES %L RETURNING *;',
+        userData.map(({ username, password, email }) => [username, password, email])
     );
     await db.query(insertUserStr);
     const users = await db.query('SELECT * FROM users');

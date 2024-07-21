@@ -21,6 +21,20 @@
         },
         {
             "method": "GET",
+            "path": "/api/users",
+            "description": "Get a list of all usernames",
+            "exampleResponse": {
+                "users": [
+                    "ScarySpice",
+                    "BabySpice",
+                    "PoshSpice",
+                    "GingerSpice",
+                    "SportySpice"
+                ]
+            }
+        },
+        {
+            "method": "GET",
             "path": "/api/users/:username",
             "description": "Get user details for a given username",
             "exampleResponse": {

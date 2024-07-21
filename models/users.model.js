@@ -3,10 +3,10 @@ const bcrypt = require("bcrypt");
 
 const fetchUser = async (username, password) => {
     try {
-      const userQueryStr = `SELECT * 
+      const queryText = `SELECT * 
                         FROM users 
                         WHERE username = $1;`;
-      const user = await db.query(userQueryStr, [username]);
+      const user = await db.query(queryText, [username]);
       if (!user.rows.length) return null;
 
       const storedPassword = user.rows[0].password;
@@ -20,10 +20,21 @@ const fetchUser = async (username, password) => {
   }
 };
 
+const fetchAllUsers = async () => {
+  try {
+    const queryText = `SELECT username FROM users`
+    const result = await db.query(queryText);
+    const usernames = result.rows.map((user) => user.username);
+    return { users: usernames};
+  } catch (err) {
+    return Promise.reject({ status: 500, msg: "Server error" })
+  }
+}
+
 const fetchUserByUsername = async (username) => {
   try {
-    const queryStr = `SELECT * FROM users WHERE username = $1`;
-    const result = await db.query(queryStr, [username]);
+    const queryText = `SELECT * FROM users WHERE username = $1`;
+    const result = await db.query(queryText, [username]);
     return result.rows[0];
   } catch (err) {
     return Promise.reject({ status: 404, msg: "Not found" });
@@ -32,8 +43,8 @@ const fetchUserByUsername = async (username) => {
 
 const createUser =  async (username, hashedPassword) => {
   try {
-    const insertStr = `INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *`;
-    const result = await db.query(insertStr, [username, hashedPassword]);
+    const queryText = `INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *`;
+    const result = await db.query(queryText, [username, hashedPassword]);
     return result.rows[0];
   } catch (err) {
     return Promise.reject({ status: 500, msg: "Failed to create user" });
@@ -41,7 +52,7 @@ const createUser =  async (username, hashedPassword) => {
 }
 
 const removeUserAccount = async (username) => {
-    let queryText = 'DELETE FROM users WHERE username = $1;';
+    const queryText = 'DELETE FROM users WHERE username = $1;';
     const deletionResult = await db.query(queryText, [username]);
 
     if (deletionResult.rowCount === 0) {
@@ -51,4 +62,4 @@ const removeUserAccount = async (username) => {
   
 }
 
-module.exports = { fetchUser, fetchUserByUsername, createUser, removeUserAccount };
+module.exports = { fetchUser, fetchAllUsers, fetchUserByUsername, createUser, removeUserAccount };

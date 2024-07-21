@@ -72,6 +72,26 @@ describe("POST /api/users/signup", () => {
     });
 });
 
+describe('GET /api/users', () => {
+    test.only('200: responds with an array of usernames', async () => {
+        const expected = [
+            "ScarySpice",
+            "BabySpice",
+            "PoshSpice",
+            "GingerSpice",
+            "SportySpice"
+        ];
+        
+        const response = await request(app)
+            .get('/api/users')
+            .expect(200);
+
+        expect(response.body.users.length).toBe(5);
+        expect(response.body.users).toEqual(expect.arrayContaining(expected));
+        response.body.users.forEach(() => expect.any(String));
+    });
+});
+
 describe("GET /api/users/:username", () => {
     test("200: responds with user details for an existing user", async () => {
         const username = "ScarySpice";

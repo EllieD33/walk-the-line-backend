@@ -73,7 +73,7 @@ describe("POST /api/users/signup", () => {
 });
 
 describe('GET /api/users', () => {
-    test.only('200: responds with an array of usernames', async () => {
+    test('200: responds with an array of usernames', async () => {
         const expected = [
             "ScarySpice",
             "BabySpice",
@@ -101,6 +101,10 @@ describe("GET /api/users/:username", () => {
             .expect(200);
 
         expect(response.body.user.username).toBe(username);
+        expect(response.body.user).toEqual(expect.objectContaining({
+            user_id: expect.any(Number),
+            username: expect.any(String),
+        }))
     });
     test("404: for non-existent user", async () => {
         const nonExistentUsername = "NonexistentUser";

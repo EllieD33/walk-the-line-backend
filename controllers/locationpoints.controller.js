@@ -9,7 +9,10 @@ const getLocationPoints = async (req, res, next) => {
         }
 
         const locationPointsArray = await fetchLocationPoints(walkId)
-        res.status(200).send({locationPoints: locationPointsArray})
+        const locationPoints = locationPointsArray.map((point) => {
+            return {...point, longitude: parseFloat(point.longitude), latitude: parseFloat(point.latitude), altitude: parseFloat(point.altitude)}
+        })
+        res.status(200).send({locationPoints})
     }
     catch (err) {
         next(err)

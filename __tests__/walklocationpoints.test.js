@@ -15,6 +15,16 @@ describe("GET /api/walklocationpoints/1", () => {
             .get("/api/walklocationpoints/1")
             .expect(200);
         expect(body.locationPoints).toHaveLength(100)
+        body.locationPoints.forEach(point => {
+            expect(point).toMatchObject({
+                walk_id: expect.any(Number), 
+                altitude: expect.any(Number), 
+                latitude: expect.any(Number), 
+                longitude: expect.any(Number), 
+                location_point_id: expect.any(Number), 
+                location_timestamp: expect.any(String), 
+            });
+        });
     });
     test('404: responds with an error for non-existent walk_id"', async () => {
         const { body } = await request(app)

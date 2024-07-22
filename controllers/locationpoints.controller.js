@@ -20,4 +20,4 @@ const getLocationPoints = async (req, res, next) => {
 }
 
 
-module.exports = {getLocationPoints}
+module.exports = { getLocationPoints }

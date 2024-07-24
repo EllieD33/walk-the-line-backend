@@ -70,7 +70,7 @@
                         "distance_km": 5.55,
                         "ascent": 200,
                         "rating": null,
-                        "difficulty": 3,
+                        "difficulty": "moderate",
                         "start_latitude": 53.7743100,
                         "start_longitude": -1.9006900,
                         "start_altitude": 0.00
@@ -96,13 +96,13 @@
                         "creator_id": 4,
                         "title": "Filtered Walk",
                         "description": "Filtered Description",
-                        "distance_km": "10.00",
-                        "ascent": "250",
+                        "distance_km": 10.00,
+                        "ascent": 250,
                         "rating": null,
-                        "difficulty": "2",
-                        "start_latitude": "53.7743100",
-                        "start_longitude": "-1.9006900",
-                        "start_altitude": "0.00"
+                        "difficulty": "easy",
+                        "start_latitude": 53.7743100,
+                        "start_longitude": -1.9006900,
+                        "start_altitude": 0.00
                     }
                 ]
             }
@@ -119,12 +119,12 @@
                         "creator_id": 3,
                         "title": "Ogden Water",
                         "description": "It is always wet in Ogden.",
-                        "distance_km": "5.55",
-                        "ascent": "219.62",
+                        "distance_km": 5.55,
+                        "ascent": 219.62,
                         "rating": null,
-                        "difficulty": "2",
-                        "start_latitude": "53.7743100",
-                        "start_longitude": "-1.9006900",
+                        "difficulty": "easy",
+                        "start_latitude": 53.7743100,
+                        "start_longitude": -1.9006900,
                         "start_altitude": "0.00"
                     }
                 ]

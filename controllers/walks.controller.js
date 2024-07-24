@@ -29,6 +29,7 @@ const postTrail = async (req, res, next) => {
         res.status(201).send(postTrailResponse)
     }
     catch(err) {
+        console.error('Error in postTrail:', err);
         res.status(err.status || 500).send({ message: err.msg || 'Internal Server Error' });
     }
 }

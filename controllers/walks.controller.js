@@ -18,7 +18,7 @@ const getWalks = async (req, res, next) => {
         res.status(200).send({ walks })
     }
     catch(err) {
-        next(err)
+        next(err);
     }
 }
 
@@ -29,8 +29,7 @@ const postTrail = async (req, res, next) => {
         res.status(201).send(postTrailResponse)
     }
     catch(err) {
-        console.error('Error in postTrail:', err);
-        res.status(err.status || 500).send({ message: err.msg || 'Internal Server Error' });
+        next(err);
     }
 }
 
@@ -41,7 +40,7 @@ const deleteWalk = async (req, res, next) => {
         res.sendStatus(204);
     }
     catch(err) {
-        next(err)
+        next(err);
     }
 }
 

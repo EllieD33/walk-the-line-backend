@@ -8,7 +8,6 @@ const getWalks = async (req, res, next) => {
         const walks = result.map((walk) => {
             return {
                 ...walk,
-                difficulty: parseInt(walk.difficulty),
                 distance_km: parseFloat(walk.distance_km),
                 ascent: parseFloat(walk.ascent),
                 start_latitude: parseFloat(walk.start_latitude),

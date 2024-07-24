@@ -46,7 +46,7 @@ const createWalksTable = async () => {
             distance_km NUMERIC(4,2),
             ascent NUMERIC,
             rating NUMERIC,
-            difficulty NUMERIC,
+            difficulty VARCHAR(50) CHECK (difficulty IN ('easy', 'moderate', 'challenging')),
             start_latitude NUMERIC(10,7) NOT NULL,
             start_longitude NUMERIC(10,7) NOT NULL,
             start_altitude NUMERIC(6,2) NOT NULL

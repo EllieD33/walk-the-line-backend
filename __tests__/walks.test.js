@@ -22,7 +22,7 @@ describe("GET /api/walks", () => {
             "distance_km": expect.any(Number),
             "ascent": expect.any(Number),
             "rating": expect.any(Number) || expect.toBeNull(),
-            "difficulty": expect.any(Number) || expect.toBeNull(),
+            "difficulty": expect.stringMatching(/easy|moderate|challenging/) || expect.toBeNull(),
             "start_latitude": expect.any(Number),
             "start_longitude": expect.any(Number),
             "start_altitude": expect.any(Number),
@@ -41,7 +41,7 @@ describe("GET /api/walks? ", () => {
 
     test("200: responds with a list of walks by difficulty", async () => {
         const { body } = await request(app)
-            .get("/api/walks?difficulty=2")
+            .get("/api/walks?difficulty=easy")
             .expect(200);
 
         expect(body.walks).toHaveLength(2);
@@ -49,7 +49,7 @@ describe("GET /api/walks? ", () => {
 
     test("200: responds with a list of walks by creator and difficulty", async () => {
         const { body } = await request(app)
-            .get("/api/walks?creator_id=4&difficulty=5")
+            .get("/api/walks?creator_id=4&difficulty=moderate")
             .expect(200);
 
         expect(body.walks).toHaveLength(1);
@@ -57,7 +57,7 @@ describe("GET /api/walks? ", () => {
 
     test("200: responds with an empty array when none match criteria", async () => {
         const { body } = await request(app)
-            .get("/api/walks?creator_id=2&difficulty=2")
+            .get("/api/walks?creator_id=2&difficulty=easy")
             .expect(200);
 
         expect(body.walks).toEqual([]);
@@ -90,7 +90,7 @@ describe("GET /api/walks? ", () => {
     test("200: responds with a list of walks when all criteria applied", async () => {
         const { body } = await request(app)
             .get(
-                "/api/walks?creator_id=4&difficulty=5&minDistance=1&maxDistance=12"
+                "/api/walks?creator_id=4&difficulty=moderate&minDistance=1&maxDistance=12"
             )
             .expect(200);
 
@@ -99,7 +99,7 @@ describe("GET /api/walks? ", () => {
 
     test("400: responds with error when invalid query parameter is provided", async () => {
         const { body } = await request(app)
-            .get("/api/walks?difficulty=invalid")
+            .get("/api/walks?difficulty=124")
             .expect(400);
 
         expect(body.msg).toBe("Bad request");
@@ -118,7 +118,7 @@ describe("GET /api/walks/:walk_id", () => {
                 distance_km: 5.55,
                 ascent: 219.62,
                 rating: null,
-                difficulty: 2,
+                difficulty: 'easy',
                 start_latitude: 53.7743100,
                 start_longitude: -1.9006900,
                 start_altitude: 0.00,

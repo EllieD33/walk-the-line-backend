@@ -10,6 +10,10 @@ const fetchWalks = async (walk_id, creator_id, difficultyRequired, minDistance, 
     
     const queryValues = [];
 
+    if (difficultyRequired && !/easy|moderate|challenging/.test(difficultyRequired)) {
+        return Promise.reject({ status: 400, msg: 'Bad request'})
+    }
+
     if (walk_id) queryText += ` AND wlk.walk_id = $${queryValues.push(walk_id)}`;
     if (creator_id) queryText += ` AND wlk.creator_id = $${queryValues.push(creator_id)}`;
     if (difficultyRequired) queryText += ` AND wlk.difficulty = $${queryValues.push(difficultyRequired)}`;
